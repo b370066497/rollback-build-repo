@@ -26,9 +26,9 @@ jobs:
       - name: Build patched FBNeo core
         run: bash tools/rollback/build-fbneo-rollback.sh
 
-      - name: Upload core artifact
+      - name: Upload core artifacts
         uses: actions/upload-artifact@v4
         with:
           name: fbneo-wasm-rollback
-          path: tools/rollback/work/build/output/fbneo-wasm.data
+          path: tools/rollback/work/build/output/*-wasm.data
           if-no-files-found: error
