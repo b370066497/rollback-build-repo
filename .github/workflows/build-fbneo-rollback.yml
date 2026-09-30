@@ -23,8 +23,10 @@ jobs:
           sudo apt-get install -y git build-essential pkgconf python3 zip \
             p7zip-full libsdl2-dev jq wget curl gpg
 
-      - name: Build patched FBNeo core
-        run: bash tools/rollback/build-fbneo-rollback.sh
+      - name: Build patched cores
+        run: |
+          EJS_CORE=fbneo bash tools/rollback/build-fbneo-rollback.sh
+          EJS_CORE=mame2003_plus bash tools/rollback/build-fbneo-rollback.sh
 
       - name: Upload core artifacts
         uses: actions/upload-artifact@v4
