@@ -38,6 +38,14 @@ if [ ! -d build ]; then
   git clone --depth 1 https://github.com/EmulatorJS/build.git build
 fi
 
+# The core declares a minimum EmulatorJS version (from build.json). Lower it to
+# the project's EmulatorJS version (4.2.3) so the loader accepts the core.
+if [ -f "$WORK/build/build.json" ] && command -v jq >/dev/null 2>&1; then
+  jq '.minimumEJSVersion = "4.2.3"' "$WORK/build/build.json" > "$WORK/build/build.json.tmp" \
+    && mv "$WORK/build/build.json.tmp" "$WORK/build/build.json"
+  echo "build.json minimumEJSVersion -> 4.2.3"
+fi
+
 # 3. pre-seed patched RetroArch where build.sh expects it ----------------
 RA="$WORK/build/compile/RetroArch"
 mkdir -p "$WORK/build/compile"
