@@ -49,7 +49,8 @@ if [ ! -d "$RA/EmulatorJS" ]; then
 fi
 
 STATE_FILE="$(grep -rln "save_state_info" "$RA" --include='*.c' | head -n1 || true)"
-STEP_FILE="$(grep -rln "emscripten_mainloop(void)" "$RA" --include='*.c' | head -n1 || true)"
+# retroarch.c is the file that defines the static emscripten_frame_count.
+STEP_FILE="$(grep -rln "emscripten_frame_count" "$RA" --include='*.c' | head -n1 || true)"
 if [ -z "$STATE_FILE" ] || [ -z "$STEP_FILE" ]; then
   echo "Could not locate patch targets." >&2
   echo "state file: $STATE_FILE" >&2
@@ -81,5 +82,11 @@ source "$WORK/emsdk/emsdk_env.sh"
 bash build.sh -c="$CORE"
 
 echo "== done =="
-echo "core: $WORK/build/output/${CORE}-wasm.data"
+CORE_OUT="$WORK/build/output/${CORE}-wasm.data"
+if [ ! -f "$CORE_OUT" ]; then
+  echo "ERROR: expected core not produced: $CORE_OUT" >&2
+  echo "See $WORK/build/output/logs/ for the failing step." >&2
+  exit 1
+fi
+echo "core: $CORE_OUT"
 echo "copy it to: public/ejs/data/cores/${CORE}-wasm.data"
