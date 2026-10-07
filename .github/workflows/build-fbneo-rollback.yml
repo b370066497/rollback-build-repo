@@ -25,8 +25,7 @@ jobs:
 
       - name: Build patched cores
         run: |
-          EJS_CORE=fbneo bash tools/rollback/build-fbneo-rollback.sh
-          EJS_CORE=mame2003_plus bash tools/rollback/build-fbneo-rollback.sh
+          EJS_CORE=fbalpha2012_cps1 bash tools/rollback/build-fbneo-rollback.sh
 
       - name: Upload core artifacts
         uses: actions/upload-artifact@v4
