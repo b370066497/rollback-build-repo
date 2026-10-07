@@ -89,6 +89,15 @@ grep -q "_ejs_save_state" "$MAKEFILE" || sed -i \
   's/_get_current_frame_count,_ejs_set_keyboard_enabled/_get_current_frame_count,_ejs_set_keyboard_enabled,_ejs_state_size,_ejs_save_state,_ejs_load_state,_ejs_state_size_full,_ejs_save_state_full,_ejs_set_frame_input,_ejs_step_frame,_ejs_get_frame/' \
   "$MAKEFILE"
 
+# Emit a linker map + symbol map so runtime memory offsets (e.g. state fields the
+# core forgets to serialize) can be mapped back to C symbols. The core bitcode is
+# linked into EJS_Runtime by this Makefile, so the map covers core + RetroArch.
+MAPFILE="$WORK/build/output/build.map"
+mkdir -p "$WORK/build/output"
+if ! grep -q "emit-symbol-map" "$MAKEFILE"; then
+  printf '\nLDFLAGS += -Wl,-Map=%s\nLDFLAGS += --emit-symbol-map\n' "$MAPFILE" >> "$MAKEFILE"
+fi
+
 # commit so build.sh's `git pull` keeps our changes
 git -C "$RA" add -A
 git -C "$RA" -c user.email=build@local -c user.name=build commit -m "EJS rollback wrapper" || true

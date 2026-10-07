@@ -32,5 +32,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: fbneo-wasm-rollback
-          path: tools/rollback/work/build/output/*-wasm.data
+          path: |
+            tools/rollback/work/build/output/*-wasm.data
+            tools/rollback/work/build/output/build.map
+            tools/rollback/work/build/output/*.symbols
           if-no-files-found: error
