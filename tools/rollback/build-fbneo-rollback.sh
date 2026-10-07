@@ -86,7 +86,7 @@ fi
 
 MAKEFILE="$RA/Makefile.emulatorjs"
 grep -q "_ejs_save_state" "$MAKEFILE" || sed -i \
-  's/_get_current_frame_count,_ejs_set_keyboard_enabled/_get_current_frame_count,_ejs_set_keyboard_enabled,_ejs_state_size,_ejs_save_state,_ejs_load_state,_ejs_set_frame_input,_ejs_step_frame,_ejs_get_frame/' \
+  's/_get_current_frame_count,_ejs_set_keyboard_enabled/_get_current_frame_count,_ejs_set_keyboard_enabled,_ejs_state_size,_ejs_save_state,_ejs_load_state,_ejs_state_size_full,_ejs_save_state_full,_ejs_set_frame_input,_ejs_step_frame,_ejs_get_frame/' \
   "$MAKEFILE"
 
 # commit so build.sh's `git pull` keeps our changes

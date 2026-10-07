@@ -39,3 +39,28 @@ int ejs_load_state(const unsigned char *src, int len)
       return 0;
    return content_deserialize_state(src, (size_t)len) ? 1 : 0;
 }
+
+/* Full (non-rewind) format, for cross-instance portability testing. */
+
+EMSCRIPTEN_KEEPALIVE
+int ejs_state_size_full(void)
+{
+   return (int)content_get_serialized_size();
+}
+
+EMSCRIPTEN_KEEPALIVE
+int ejs_save_state_full(unsigned char *dst, int cap)
+{
+   size_t len = 0;
+   void *data = content_get_serialized_data(&len);
+   if (!data)
+      return -1;
+   if (!dst || cap <= 0 || (size_t)cap < len)
+   {
+      free(data);
+      return -1;
+   }
+   memcpy(dst, data, len);
+   free(data);
+   return (int)len;
+}
