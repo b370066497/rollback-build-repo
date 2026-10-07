@@ -45,6 +45,16 @@ if [ -f "$WORK/build/build.json" ] && command -v jq >/dev/null 2>&1; then
   echo "build.json minimumEJSVersion -> 4.2.3"
 fi
 
+# Optionally override the core repository/branch (e.g. use canonical libretro/fbneo
+# instead of the EmulatorJS fork).
+if [ -n "${EJS_CORE_REPO:-}" ] && command -v jq >/dev/null 2>&1 && [ -f "$WORK/build/cores.json" ]; then
+  jq --arg name "$CORE" --arg repo "$EJS_CORE_REPO" --arg branch "${EJS_CORE_BRANCH:-master}" \
+     'map(if .name == $name then (.repo = $repo | .branch = $branch) else . end)' \
+     "$WORK/build/cores.json" > "$WORK/build/cores.json.tmp" \
+    && mv "$WORK/build/cores.json.tmp" "$WORK/build/cores.json"
+  echo "cores.json $CORE repo -> $EJS_CORE_REPO (${EJS_CORE_BRANCH:-master})"
+fi
+
 # 3. pre-seed patched RetroArch where build.sh expects it ----------------
 RA="$WORK/build/compile/RetroArch"
 mkdir -p "$WORK/build/compile"
